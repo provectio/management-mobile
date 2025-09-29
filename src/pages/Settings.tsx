@@ -3,7 +3,6 @@ import { useAppStore } from '../store/useAppStore';
 import { useTheme } from '../components/ThemeProvider';
 import { 
   CogIcon,
-  KeyIcon,
   BellIcon,
   ShieldCheckIcon,
   InformationCircleIcon
