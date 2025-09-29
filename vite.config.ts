@@ -17,5 +17,11 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['axios', 'js-cookie', 'jwt-decode']
+  },
+  resolve: {
+    alias: {
+      // Ensure axios uses the correct adapter
+      'axios/lib/adapters/fetch': 'axios/lib/adapters/xhr'
+    }
   }
 })

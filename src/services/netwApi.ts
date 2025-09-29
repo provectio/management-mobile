@@ -2,8 +2,30 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 import { NetwAuthResponse, NetwUser, Client, Line, SimCard, ConsumptionData, ApiResponse } from '../types';
 
+// Polyfill for Request and Response if not available (for older browsers)
+if (typeof window !== 'undefined' && !window.Request) {
+  // @ts-ignore
+  window.Request = class Request {
+    constructor(input: any, init?: any) {
+      // Fallback implementation
+    }
+  };
+}
+
+if (typeof window !== 'undefined' && !window.Response) {
+  // @ts-ignore
+  window.Response = class Response {
+    constructor(body?: any, init?: any) {
+      // Fallback implementation
+    }
+  };
+}
+
 // Configuration axios pour éviter les problèmes de CORS
 axios.defaults.withCredentials = false;
+
+// Force axios to use XHR adapter instead of fetch to avoid Request/Response constructor issues
+axios.defaults.adapter = 'xhr';
 
 class NetwApiService {
   private api: AxiosInstance;
@@ -22,6 +44,7 @@ class NetwApiService {
       headers: {
         'Content-Type': 'application/json',
       },
+      adapter: 'xhr', // Force XHR adapter to avoid fetch adapter issues
     });
 
     // Intercepteur pour ajouter le token d'authentification
