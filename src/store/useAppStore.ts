@@ -136,8 +136,11 @@ export const useAppStore = create<AppStore>()(
       },
 
       checkAuth: () => {
+        console.log('checkAuth called');
         const isAuthenticated = netwApi.isAuthenticated();
         const user = netwApi.getCurrentUser();
+        
+        console.log('Auth state:', { isAuthenticated, user });
         
         set({
           isAuthenticated,
