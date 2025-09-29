@@ -17,23 +17,38 @@ function App() {
 
   useEffect(() => {
     const initializeApp = async () => {
-      // Vérifier l'authentification au démarrage
-      checkAuth();
-      setIsInitialized(true);
+      try {
+        // Vérifier l'authentification au démarrage
+        checkAuth();
+        // Attendre un peu pour s'assurer que l'état est mis à jour
+        setTimeout(() => {
+          setIsInitialized(true);
+        }, 100);
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        setIsInitialized(true);
+      }
     };
 
     initializeApp();
+
+    // Timeout de sécurité pour éviter le blocage
+    const timeout = setTimeout(() => {
+      console.warn('App initialization timeout, forcing initialization');
+      setIsInitialized(true);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
   }, [checkAuth]);
 
-  // Afficher un loader pendant l'initialisation
-  if (!isInitialized || loading) {
+  // Afficher un loader pendant l'initialisation (avec timeout de sécurité)
+  if (!isInitialized) {
     console.log('App loading:', { isInitialized, loading, isAuthenticated });
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-provectio-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Chargement de Provectio Télécom...</p>
-          <p className="text-xs text-gray-400 mt-2">Debug: {JSON.stringify({ isInitialized, loading, isAuthenticated })}</p>
         </div>
       </div>
     );
